@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JqueryFinalProject</title>
+    
+
+    
+
+
+    <style>
+        body{
+            background-color: black;
+        }
+
+        .fixer{
+            margin: auto; 
+            text-align: center;
+            padding: 10px;
+            color: white;
+            background-color: rgb(0, 0, 0);
+
+        }
+    .hello{
+        text-decoration: none;
+    }
+       
+
+
+    button#begin_journey{
+        border: none; 
+        text-decoration: none;
+        background: none;
+        position: relative;
+        color: rgb(63, 55, 55);
+        cursor:pointer;
+        display: block; 
+        margin-bottom: 10px;
+        font-size: 25px; 
+        
+
+    }
+
+    button#begin_journey:hover::before{
+        content: "\27BB";
+        height: 0px;
+        width: 108px;
+        position: absolute;
+        font-size: 20px;
+        color: white; 
+        top: 3px;
+        left: 0px;
+        /* border: 1px solid rgb(255, 255, 255); */
+        animation: button_anim 4.5s ease 0s normal forwards;
+}
+
+
+    
+    
+
+    @keyframes button_anim{
+	0% {
+		opacity: 0.8;
+        width: 30px;
+		transform: translateX(80px);
+	}
+    20% {
+		opacity: 0.3;
+        width: 10px;
+		transform: translateX(300px);
+	}
+
+     100% {
+		opacity:1;
+        width: 100px;
+		transform: translateX(2500px);
+	}}
+
+        
+
+        
+    </style>
+</head>
+<body>
+
+
+    
+    <a href="" class="hello">
+        <button id="begin_journey">
+            STAR WARS
+        </button>
+    </a>
+    <button class="fixer" id="butt1">PREVIOUS CHARACTER</button>
+    <button class="fixer" id="butt2">NEXT CHARACTER</button><br><br>
+    
+    <h1 class="fixer"></h1>
+    <img class="fixer" src="https://www.galerie-sakura.com/media/main/produit/8931d66f9eaaf5e5e8a7a0dac0a6561759df3350.jpg" alt="" id="char" width="350" height="450">
+    <div></div>
+    
+
+
+
+
+
+
+
+    
+
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js"
+        integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" crossorigin="anonymous"></script>
+
+    <script>
+
+        $(document).ready(function () {
+            console.log("jQuery is loaded!")
+
+
+            
+        // HERE THE "NEXT" BUTTON IS CONSTRUCTED        
+            
+            
+
+            let randomArray = [];
+            let count=1; 
+
+            $("button#butt2").on("click", function (e) {
+                const randomChar = Math.ceil(Math.random() * 88)
+                count = 1;
+
+
+
+                $.get(`https://akabab.github.io/starwars-api/api/id/${randomChar}.json`, function (data) {
+                    let img_href = (data["image"])
+                    let name = (data["name"])
+
+
+                    $.ajax({
+                        url: img_href, success: function (data) {
+                            $("#char").attr({ src: img_href, alt: "character image" });
+                            console.log("The image was successfully loaded", randomChar)
+                        }
+                    })
+                    $.ajax({
+                        url: img_href, error: function (data) {
+                            uri_img = "https://cdn.dribbble.com/users/1291613/screenshots/3229838/empire_404_800x600.png";
+                            $("#char").attr({ src: uri_img, alt: "character image" });
+                            console.log("The image could not be loaded", randomChar)
+                        }
+                    })
+
+                    $("h1").text(name);
+
+                    randomArray.push(randomChar)
+
+
+
+                })
+
+
+            })
+
+                         
+
+
+
+            //---------------------------------------------------------------------------------------------------------//
+            
+           
+            console.log("this is from:" + count)   
+
+            //HERE THE PREVIOUS ICON IS CONSTRUCTED///////////////////
+
+            try {
+
+
+                $("button#butt1").on("click", function () {
+
+                    count = count += 1;
+                    const prevButton = randomArray.at(-count);
+                    console.log("button:" + " " + prevButton);
+
+                    $.get(`https://akabab.github.io/starwars-api/api/id/${prevButton}.json`, function (data) {
+                        let img_href = (data["image"])
+                        let name = (data["name"])
+
+                        $.ajax({
+                            url: img_href, success: function (data) {
+                                $("#char").attr({ src: img_href, alt: "character image" })
+                            }
+                        })
+                        $.ajax({
+                            url: img_href, error: function (data) {
+                                uri_img = "https://cdn.dribbble.com/users/1291613/screenshots/3229838/empire_404_800x600.png";
+                                $("#char").attr({ src: uri_img, alt: "character image" })
+                            }
+                        })
+
+                        $("h1").text(name);
+
+
+
+
+                    })
+                })
+                
+            } catch (error) {
+                console.warn("You most likely pressed the previous button first" + " " + error)
+                
+            }
+
+            
+                
+
+               
+
+            
+
+               
+
+                
+                
+            
+
+            
+
+            
+
+
+            
+
+        })
+
+
+    </script>
+    
+</body>
+</html>
